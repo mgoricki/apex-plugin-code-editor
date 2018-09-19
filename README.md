@@ -18,9 +18,9 @@ APEX (5.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaScr
 
 - Import plugin file item_type_plugin_com_apexbyg_blogspot_codemirror.sql
 
-- (Optional) To optimize performance upload static files (CSS and JS) from server directory to Webserver and change File Prefix to point on server directory
+- (Optional) To optimize performance upload static files (CSS and JS) from server/nitro/dist directory to Webserver and change File Prefix to point on server directory
 
-- (Optional) Compile package pck_advanced_plugin (from source) in DB schema (available to APEX parsing schema) and change parameter Render Procedure/Function Name to pck_advanced_plugin.p_render_item
+- (Optional) Compile package pck_code_editor_plugin (from source directory) in DB schema (available to APEX parsing schema) and change parameter Render Procedure/Function Name to pck_code_editor_plugin.p_render
 
 # Settings
 
@@ -28,6 +28,8 @@ Currently there's no custom parameters.
 
 # Notes
 
-Plugin is still in Beta version supporting only PL/SQL 
+Plugin is still in Beta version supporting only PL/SQL and only some features.
 
 # Demo
+
+Demo is available [here](https://apex.oracle.com/pls/apex/f?p=100309:55).

@@ -1,11 +1,10 @@
 .CodeMirror{
   background-color:#fff;
-  width:100%;
+  width:100%; 
 }
 
 .codemirror-wrapper {
   border: 1px solid #dddddd;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap; 
 }
 
@@ -18,12 +17,8 @@
 }  
 
 .codemirror-wrapper .codemirror-toolbar .a-Button {
-  -webkit-box-shadow: 0 0 0 1px transparent inset;
   box-shadow: 0 0 0 1px transparent inset;
-  -webkit-transition: background-color .1s,-webkit-box-shadow .1s;
-  transition: background-color .1s,-webkit-box-shadow .1s;
   transition: background-color .1s,box-shadow .1s;
-  transition: background-color .1s,box-shadow .1s,-webkit-box-shadow .1s;
 }
 
 
@@ -91,5 +86,3 @@
 .codemirror-wrapper.codemirror-readonly .CodeMirror .CodeMirror-scroll{
   opacity: 0.8;
 }
-
-/*# sourceMappingURL=codemirror_custom.css.map */
