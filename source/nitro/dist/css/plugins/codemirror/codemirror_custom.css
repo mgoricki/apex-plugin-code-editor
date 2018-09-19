@@ -67,6 +67,22 @@
   display:none
 }  
 
+/* Floating label */
+.codemirror-container-wrapper.t-Form-fieldContainer--floatingLabel .t-Form-label{
+  line-height: 2rem;
+  font-size: 1.1rem;
+  padding-top: 0.4rem;  
+}
+
+.codemirror-container-wrapper.t-Form-fieldContainer--floatingLabel .codemirror-wrapper .codemirror-toolbar{
+  height:51px;
+  padding-top:20px;
+}
+
+.codemirror-container-wrapper.t-Form-fieldContainer--floatingLabel .codemirror-wrapper.codemirror-wrapp-fullscreen .codemirror-toolbar{
+  height:41px;
+  padding-top:8px;
+}
 
 /* Reaonly */
 .codemirror-wrapper.codemirror-readonly .CodeMirror{

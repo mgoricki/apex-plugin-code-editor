@@ -290,8 +290,7 @@ function customHint ( pEditor, pCallback, pOptions ) {
           var modeOption = pEditor.doc.modeOption,
               hint,
               options = {};
-          
-              console.log(modeOption);
+                        
           switch (modeOption) {
               case "text/javascript": 
                 hint = CodeMirror.hint.javascript; 
@@ -382,8 +381,8 @@ function customHint ( pEditor, pCallback, pOptions ) {
   
     // Log/Debug Function
     _log: function (pFunctionName, pLogMessage){
-      //apex.debug.log('Code Mirror', pFunctionName, pLogMessage);
-      console.log('Code Mirror', pFunctionName, pLogMessage);
+      apex.debug.log('Code Mirror', pFunctionName, pLogMessage);
+      //console.log('Code Mirror', pFunctionName, pLogMessage);
     },
   
     _destroy: function(){
@@ -451,6 +450,8 @@ function customHint ( pEditor, pCallback, pOptions ) {
 
       uiw.element.after(toolbar.toString());
       uiw.element.closest('div').addClass('codemirror-wrapper');
+      uiw.element.closest('div.t-Form-fieldContainer').addClass('codemirror-container-wrapper');
+      
 /*
       uiw.settingsMenu$ = $(toolbar);
       uiw.settingsMenu$.menu({
