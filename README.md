@@ -1,5 +1,5 @@
 # APEX Code Editor Plugin
-APEX (5.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaScript Library (version 5.34.0).
+APEX (18.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaScript Library (version 5.34.0).
 
 # Features
   - Readonly Mode
@@ -12,7 +12,8 @@ APEX (5.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaScr
 
 # Changelog
 
-1.0.0 Beta 20180919 - Initial Release
+- 1.0.0 20180919 - Initial Release
+- 1.0.1 20180920 - Added support for disable/enable DA
 
 # Install
 
@@ -29,6 +30,8 @@ Currently there's no custom parameters.
 # Notes
 
 Plugin is still in Beta version supporting only PL/SQL and only some features.
+
+You can also find 5.1 version in source directory but it's not upgraded from version 1.0.0.
 
 # Demo
 

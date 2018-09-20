@@ -212,6 +212,7 @@ function customHint ( pEditor, pCallback, pOptions ) {
 (function ($, util) {
   "use strict";
 
+  var C_PLUGIN_NAME = "Code Mirror Editor";
   var C_TOOLBAR_CLASS = "codemirror-toolbar";
   var C_TOOLBAR_CLASS_READONLY = "codemirror-readonly";
 
@@ -353,12 +354,12 @@ function customHint ( pEditor, pCallback, pOptions ) {
         
         // disable
         disable: function(){
-          apex.debug.log('CodeMirror Plugin', 'Not implemented');
+          uiw._disable();
         },
         
         // enable
         enable: function(){
-          apex.debug.log('CodeMirror Plugin', 'Not implemented'); 
+          uiw._enable();
         },    
         
         // show
@@ -466,7 +467,26 @@ function customHint ( pEditor, pCallback, pOptions ) {
         ]}
       );
       */
+    },
+    _enable: function(){
+      var uiw = this;
+      apex.debug.log(C_PLUGIN_NAME, '_enable');
+      uiw._editor.setOption('readOnly', false);
+      var wrapper$ = uiw.element.closest('.codemirror-wrapper');
+      wrapper$.removeClass(C_TOOLBAR_CLASS_READONLY);
+      wrapper$.find('.codemirror-toolbar > button[id$=undo]').prop('disabled', false);
+      wrapper$.find('.codemirror-toolbar > button[id$=redo]').prop('disabled', false);
+    },
+    _disable: function(){
+      var uiw = this;
+      apex.debug.log(C_PLUGIN_NAME, '_disable');
+      uiw._editor.setOption('readOnly', true);
+      var wrapper$ = uiw.element.closest('.codemirror-wrapper');
+      wrapper$.addClass(C_TOOLBAR_CLASS_READONLY);
+      wrapper$.find('.codemirror-toolbar > button[id$=undo]').prop('disabled', true);
+      wrapper$.find('.codemirror-toolbar > button[id$=redo]').prop('disabled', true);
     }
+
 
   });  
 
