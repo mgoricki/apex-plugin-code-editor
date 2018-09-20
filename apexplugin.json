@@ -1,0 +1,37 @@
+{
+  "name" : "Code Mirror Code Editor",
+  "version" : "1.0.1",
+  "description" : "Oracle APEX item type plugin for code editing.",
+  "keywords" : ["item type plugin", "code editor", "editor", "CodeMirror"],
+  "homepage" : "https://github.com/mgoricki/apex-plugin-code-editor",
+  "bugs" : {
+    "url" : "https://github.com/mgoricki/apex-plugin-code-editor/issues",
+    "email" : "mgoricki8@gmail.com"
+  },
+  "license" : "MIT",
+  "author" : {
+    "name" : "Marko Goricki",
+    "email" : "mgoricki8@gmail.com",
+    "url" : "http://apexbyg.blogspot.com",
+    "twitter" : "mgoricki",
+    "donationUrl" : "https://www.paypal.me/mgoricki"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/mgoricki/apex-plugin-code-editor"
+  },
+  "oracle" : {
+    "versions" : ["11.2.0.1", "12.1.0.1"],
+    "apex" : {
+      "versions" : ["18.1.0.00.45"],
+      "plugin" : {
+        "internalName" : "COM.APEXBYG.BLOGSPOT.CODEMIRROR",
+        "type" : "item",
+        "demo" : "https://apex.oracle.com/pls/apex/f?p=apexbyg:codeeditor",
+        "previewImage" : "https://raw.githubusercontent.com/mgoricki/apex-plugin-extend-ig-toolbar/master/preview01.gif"
+
+
+      }
+    }
+  }
+}
