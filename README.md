@@ -29,7 +29,7 @@ Currently there's no custom parameters.
 
 # Notes
 
-Plugin is still in Beta version supporting only PL/SQL and only some features.
+Plugin is still in Beta version supporting only PL/SQL syntax highlighting.
 
 You can also find 5.1 version in source directory but it's not upgraded from version 1.0.0.
 
