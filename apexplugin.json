@@ -1,6 +1,6 @@
 {
   "name" : "Code Mirror Code Editor",
-  "version" : "1.0.1",
+  "version" : "1.0.2",
   "description" : "Oracle APEX item type plugin for code editing.",
   "keywords" : ["item type plugin", "code editor", "editor", "CodeMirror"],
   "homepage" : "https://github.com/mgoricki/apex-plugin-code-editor",
@@ -23,7 +23,7 @@
   "oracle" : {
     "versions" : ["11.2.0.1", "12.1.0.1"],
     "apex" : {
-      "versions" : ["18.1.0.00.45"],
+      "versions" : ["18.2.0.00.12"],
       "plugin" : {
         "internalName" : "COM.APEXBYG.BLOGSPOT.CODEMIRROR",
         "type" : "item",
