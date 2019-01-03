@@ -222,7 +222,8 @@ function customHint ( pEditor, pCallback, pOptions ) {
       readonly: false,
       ignoreChanged: false, // Warn On Unsaved Changes
       ajaxId: null,
-      autocomplete: false
+      autocomplete: false,
+      runInFullscreen: false
     },
     changed: false,
     baseId:  "aCodeMirrorPlugin",
@@ -261,6 +262,7 @@ function customHint ( pEditor, pCallback, pOptions ) {
             autoCloseBrackets: true
           });
 
+
       // event handlers
       // if Warn on unsaved changes is set to Yes
       if (!uiw.options.ignoreChanged){
@@ -278,6 +280,10 @@ function customHint ( pEditor, pCallback, pOptions ) {
       
       
       uiw._initToolbar();
+
+      if (uiw.options.runInFullscreen){
+        uiw._editor.setOption('fullScreen', true);
+      }    
 
       // if Editor is readonly add class to the wrapper 
       if (uiw._editor.isReadOnly()){

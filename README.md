@@ -14,6 +14,7 @@ APEX (18.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaSc
 
 - 1.0.0 20180919 - Initial Release
 - 1.0.1 20180920 - Added support for disable/enable DA
+- 1.0.2 20190103 - Run in fullscreen mode attribute
 
 # Install
 
@@ -25,7 +26,7 @@ APEX (18.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaSc
 
 # Settings
 
-Currently there's no custom parameters. 
+- Run in fullscreen
 
 # Notes
 

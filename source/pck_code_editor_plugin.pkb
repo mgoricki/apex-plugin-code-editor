@@ -110,6 +110,7 @@
       apex_javascript.add_attribute('readonly', p_param.is_readonly, p_add_comma => true)||
       apex_javascript.add_attribute('ignoreChanged', p_item.ignore_change, p_add_comma => true)||
       apex_javascript.add_attribute('ajaxId', apex_plugin.get_ajax_identifier, p_add_comma => true)||
+      apex_javascript.add_attribute('runInFullscreen', (case when p_item.attribute_01 = 'Y' then true else false end), p_add_comma => true)||      
       apex_javascript.add_attribute('itemName', p_item.name, p_add_comma => false)||
     '});';
     apex_javascript.add_onload_code (p_code => v_js_code);      
