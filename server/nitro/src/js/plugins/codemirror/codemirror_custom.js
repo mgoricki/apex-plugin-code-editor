@@ -8,19 +8,22 @@
 * Blog:    apexbyg.blogspot.com 
 *
 * Depends:
-*    apex/debug.js
+*    apex/debug.js 
 *
 * Changes:
 *
+* v.1.0.3 - 20191009 - setHeight and setWidth
 * v.1.0.0 - 20180820 - Initial version
 *
 * Public Methods:
 *
 *   Get Options
-*   $('#P6_DEPTNO').master_detail_item('option');
+*   $('#P2_EDITOR').codemirror_plugin('option');
 *
-*   Get Selected Row Data
-*   $('#P6_DEPTNO').master_detail_item('getSelectedRowData');
+*   Set Height
+*   apex.item('P2_EDITOR').callbacks.setHeight('auto');
+*   apex.item('P2_EDITOR').callbacks.setHeight('600'); -- in px
+*   apex.item('P2_EDITOR').callbacks.setHeight('100%'); -- in %
 *
 * Notes:
 *   - 
@@ -254,7 +257,7 @@ function customHint ( pEditor, pCallback, pOptions ) {
               "Ctrl-Space": "autocomplete",
               "F11": function(cm) {
                 cm.setOption("fullScreen", !cm.getOption("fullScreen"));
-              },
+              },            
               "Esc": function(cm) {
                 if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
               }
@@ -381,7 +384,17 @@ function customHint ( pEditor, pCallback, pOptions ) {
         // is changed        
         isChanged: function() {
           return uiw.changed;
-        } 
+        },
+
+        // setHeight - can be 'auto', or number in px or number in %
+        setHeight: function(pHeight){
+          uiw._editor.setSize(null,pHeight);
+        },
+
+        // setWidth - can be 'auto', or number in px or number in %
+        setWidth: function(pWidth){
+          uiw._editor.setSize(pWidth,null);
+        }        
                 
       });    
     },

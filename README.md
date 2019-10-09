@@ -15,6 +15,7 @@ APEX (18.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaSc
 - 1.0.0 20180919 - Initial Release
 - 1.0.1 20180920 - Added support for disable/enable DA
 - 1.0.2 20190103 - Run in fullscreen mode attribute
+- 1.0.3 20191009 - setHeight
 
 # Install
 
@@ -26,7 +27,28 @@ APEX (18.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaSc
 
 # Settings
 
-- Run in fullscreen
+## Set Height
+
+You can set height dynamicall by running:
+```javascript
+apex.item('P2_EDITOR').callbacks.setHeight('500');
+```
+where P2_EDITOR is static ID of the plugin item.
+
+The value can be number (in pixels), 'auto' or number with percentage.
+```javascript
+apex.item('P2_EDITOR').callbacks.setHeight('500');
+apex.item('P2_EDITOR').callbacks.setHeight('100%');
+apex.item('P2_EDITOR').callbacks.setHeight('auto');
+```
+
+You can also set height with CSS:
+```css
+#P2_EDITOR_CONTAINER .CodeMirror{
+  height:800px
+}
+```
+where P2_EDITOR is static ID of the plugin item.
 
 # Notes
 

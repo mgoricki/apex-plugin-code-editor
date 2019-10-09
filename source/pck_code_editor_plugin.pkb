@@ -1,7 +1,4 @@
 --------------------------------------------------------
---  File created - Wednesday-September-19-2018   
---------------------------------------------------------
---------------------------------------------------------
 --  DDL for Package Body PCK_CODE_EDITOR_PLUGIN
 --------------------------------------------------------
 
@@ -52,7 +49,7 @@
       ,p_check_to_add_minified   => false
       ,p_skip_extension          => false
       );      
-
+    /*
     apex_javascript.add_library (
        p_name                    => 'js/plugins/codemirror/addon/display/fullscreen'
       ,p_directory               => p_plugin.file_prefix
@@ -60,7 +57,7 @@
       ,p_check_to_add_minified   => true
       ,p_skip_extension          => false
       );     
-
+    */
     apex_javascript.add_library (
        p_name                    => 'lib/codemirror/addon/edit/closebrackets'
       ,p_directory               => p_plugin.file_prefix
@@ -78,7 +75,7 @@
       );           
 
     apex_javascript.add_library (
-       p_name                    => 'js/plugins/codemirror/codemirror_custom'
+       p_name                    => 'js/codemirror_custom'
       ,p_directory               => p_plugin.file_prefix
       ,p_version                 => null
       ,p_check_to_add_minified   => true
@@ -100,7 +97,7 @@
       ,p_skip_extension => false);      
 
     apex_css.add_file (
-       p_name           => 'css/plugins/codemirror/codemirror_custom'
+       p_name           => 'css/codemirror_custom'
       ,p_directory      => p_plugin.file_prefix
       ,p_version        => null
       ,p_skip_extension => false);
