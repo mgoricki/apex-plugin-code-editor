@@ -73,6 +73,9 @@
           var vOutput = comp.filter(function(value, index, arr){    
             var vParam = value.text.toLowerCase();
             var vParamOnly = vParam.substr(vParam.indexOf('$')+1);
+            if (vParam.indexOf(':')==0){
+              vParam = vParam.substr(vParam.indexOf(':')+1);
+            }
             
             return vParam.startsWith(word) || vParamOnly.startsWith(word);
           });
