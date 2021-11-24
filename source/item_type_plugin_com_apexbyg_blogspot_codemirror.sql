@@ -28,7 +28,7 @@ prompt APPLICATION 148 - Plugins - Code Editor
 -- Application Export:
 --   Application:     148
 --   Name:            Plugins - Code Editor
---   Date and Time:   10:51 Wednesday November 24, 2021
+--   Date and Time:   10:53 Wednesday November 24, 2021
 --   Exported By:     MGORICKI
 --   Flashback:       0
 --   Export Type:     Component Export
@@ -181,8 +181,8 @@ wwv_flow_api.create_plugin(
 '    apex_javascript.add_onload_code (p_code => v_js_code);      ',
 '  end p_render;'))
 ,p_api_version=>2
-,p_render_function=>'PCK_CODE_EDITOR_PLUGIN.p_render'
-,p_ajax_function=>'PCK_CODE_EDITOR_PLUGIN.p_ajax_call'
+,p_render_function=>'p_render'
+,p_ajax_function=>'p_ajax_call'
 ,p_standard_attributes=>'VISIBLE:FORM_ELEMENT:SESSION_STATE:READONLY:SOURCE:INIT_JAVASCRIPT_CODE'
 ,p_substitute_attributes=>true
 ,p_subscribe_plugin_settings=>true
