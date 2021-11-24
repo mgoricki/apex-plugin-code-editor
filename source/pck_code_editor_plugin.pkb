@@ -1,10 +1,6 @@
---------------------------------------------------------
---  DDL for Package Body PCK_CODE_EDITOR_PLUGIN
---------------------------------------------------------
-
-  CREATE OR REPLACE EDITIONABLE PACKAGE BODY PCK_CODE_EDITOR_PLUGIN 
-  as
-
+create or replace PACKAGE BODY PCK_CODE_EDITOR_PLUGIN 
+as
+  
   -----------------------------------------------------------------------------
   -- PROCEDURE p_render
   -- %usage: plugin render function
@@ -12,10 +8,12 @@
     p_item   in            apex_plugin.t_item,
     p_plugin in            apex_plugin.t_plugin,
     p_param  in            apex_plugin.t_item_render_param,
-    p_result in out nocopy apex_plugin.t_item_render_result) 
+    p_result in out nocopy apex_plugin.t_item_render_result
+  ) 
   as
     v_js_code  varchar2(4000);
     v_readonly varchar2(100);
+    v_autocomplete_hints  varchar2(32676);
   begin
     --apex_Debug.enable;
 
@@ -103,13 +101,31 @@
       ,p_version        => null
       ,p_skip_extension => false);
 
+    if p_item.attribute_03 is not null then    
+      v_autocomplete_hints := apex_plugin_util.get_plsql_function_result(p_item.attribute_03);
+      apex_javascript.add_inline_code('var vAutocompleteHints_'||p_item.name||' = '||v_autocomplete_hints);
+    end if;
 
-    v_js_code := 'apex.jQuery("textarea#'||p_item.name||'").codemirror_plugin({'||
+    v_js_code := 'apex.jQuery("textarea#'||p_item.name||'").codemirror_plugin({"config":';
+    
+    if p_item.init_javascript_code is not null then
+      v_js_code := v_js_code||'('||p_item.init_javascript_code||')';
+    end if;
+
+    v_js_code := v_js_code||'({}),';
+    
+    v_js_code :=  v_js_code ||        
       apex_javascript.add_attribute('readonly', p_param.is_readonly, p_add_comma => true)||
       apex_javascript.add_attribute('ignoreChanged', p_item.ignore_change, p_add_comma => true)||
       apex_javascript.add_attribute('ajaxId', apex_plugin.get_ajax_identifier, p_add_comma => true)||
       apex_javascript.add_attribute('runInFullscreen', (case when p_item.attribute_01 = 'Y' then true else false end), p_add_comma => true)||      
-      apex_javascript.add_attribute('itemName', p_item.name, p_add_comma => false)||
+      apex_javascript.add_attribute('autocomplete', (case when p_item.attribute_02 = 'Y' then true else false end), p_add_comma => true)
+   ;  
+   
+   if v_autocomplete_hints is not null then
+    v_js_code :=  v_js_code || '"autocompleteHints":vAutocompleteHints_'||p_item.name||','; 
+   end if; 
+    v_js_code :=  v_js_code || apex_javascript.add_attribute('itemName', p_item.name, p_add_comma => false)||
     '});';
     apex_javascript.add_onload_code (p_code => v_js_code);      
   end p_render;

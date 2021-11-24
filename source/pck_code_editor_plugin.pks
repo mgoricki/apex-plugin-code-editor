@@ -1,11 +1,4 @@
---------------------------------------------------------
---  File created - Wednesday-September-19-2018   
---------------------------------------------------------
---------------------------------------------------------
---  DDL for Package PCK_CODE_EDITOR_PLUGIN
---------------------------------------------------------
-
-  CREATE OR REPLACE EDITIONABLE PACKAGE PCK_CODE_EDITOR_PLUGIN as 
+create or replace PACKAGE PCK_CODE_EDITOR_PLUGIN as 
 
   -----------------------------------------------------------------------------
   -- PROCEDURE p_render
