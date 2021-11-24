@@ -11,7 +11,8 @@
 *    apex/debug.js 
 *
 * Changes:
-*
+* 
+* v.1.0.4 - 20211123 - upgraded to CodeMirror 5.64.0, APEX version 21.2
 * v.1.0.3 - 20191009 - setHeight and setWidth
 * v.1.0.0 - 20180820 - Initial version
 *
@@ -30,188 +31,8 @@
 *
 */
 
-// Custom Hint Function
-/*
-function customHint ( pEditor, pCallback, pOptions ) {
-  var cur    = pEditor.getCursor(),
-      token  = pEditor.getTokenAt(cur),
-      search = token.string.trim();
-
-  // pData has to be in the format:
-  //   [
-  //     type:      "string" (template, application_item, page_item, package, procedure, function, constant, variable, type, table, view),
-  //     title:     "string",
-  //     className: "string",
-  //     completions: [
-  //       { d: "string", r: "string" } or "string"
-  //     ]
-  //   ]
-  function _success( pData ) {
-
-    var type,
-        completion,
-        completions = [];
-    for ( var i = 0; i < pData.length; i++ ) {
-        type = pData[ i ];
-
-        for ( var j = 0; j < type.completions.length; j++ ) {
-            completion = type.completions[ j ];
-            completions.push({
-                text:        completion.r || completion,
-                displayText: ( completion.d || completion ) + " (" + type.title + ")",
-                className:   type.className,
-                type:        type.type,
-                hint:        _replaceCompletion
-            });
-        }
-    }
-
-    // sort our hint list by display value, but always use lower case, because PL/SQL is not case sensitive
-    completions.sort( function( a, b ) {
-        return a.displayText.toLowerCase().localeCompare( b.displayText.toLowerCase());
-    });
-
-    pCallback({
-        list: completions,
-        from: CodeMirror.Pos( cur.line, token.start ),
-        to:   CodeMirror.Pos( cur.line, token.end )
-    });
-
-  } // _success
 
 
-  function _replaceCompletion( pEditor, pSelf, pCompletion ) {
-
-      var text = pCompletion.text,
-          cursor,
-          placeholders,
-          placeholder,
-          placeholderValues = {},
-          cursorPlaceholderPos,
-          newLinePos;
-
-      // For package we automatically want to add "." at the end to immediately allow to enter a function/variable/...
-      if ( pCompletion.type === "package" ) {
-
-          text  += ".";
-
-      } else if ( pCompletion.type === "procedure" || pCompletion.type === "function" ) {
-
-          // For procedures and functions we automatically want to add () at the end and position the cursor
-          // between the brackets
-
-          text  += "()";
-          cursor = {
-              line: pSelf.from.line,
-              ch:   pSelf.from.ch + text.length - 1
-          };
-
-      } else if ( pCompletion.type === "template" ) {
-
-          // For templates, ask the user for a value for each placeholders in the format $xxx$ and replace
-          // it in the text
-          placeholders = text.match( /\$[a-z]{1,}\$/g );
-          if ( placeholders ) {
-              for ( var i = 0; i < placeholders.length; i++ ) {
-                  placeholder = placeholders[ i ].substr( 1, placeholders[ i ].length - 2 );
-                  if ( !placeholderValues.hasOwnProperty( placeholder ) && placeholder !== "cursor" ) {
-                      placeholderValues[ placeholder ] = window.prompt( placeholder );
-                  }
-              }
-              for ( placeholder in placeholderValues ) {
-                  if ( placeholderValues.hasOwnProperty( placeholder )) {
-                      text = text.replace( new RegExp( "\\$" + placeholder + "\\$", "gi" ), placeholderValues[ placeholder ]);
-                  }
-              }
-          }
-          // Indent each line of the template with spaces
-          if ( pSelf.from.ch > 0 ) {
-              text = text.replace( /\n/g, "\n" + new Array( pSelf.from.ch + 1 ).join( " " ));
-          }
-          // If the $cursor$ placeholder has been used, put the cursor at this position
-          cursorPlaceholderPos = text.indexOf( "$cursor$" );
-          if ( cursorPlaceholderPos !== -1 ) {
-              newLinePos = text.lastIndexOf( "\n", cursorPlaceholderPos );
-              if ( newLinePos !== - 1 ) {
-                  cursor = {
-                      line: pSelf.from.line + ( text.substr( 0, cursorPlaceholderPos ).match( /\n/g ) || [] ).length,
-                      ch:   cursorPlaceholderPos - newLinePos - 1
-                  };
-              } else {
-                  cursor = {
-                      line: pSelf.from.line,
-                      ch:   pSelf.from.ch + cursorPlaceholderPos
-                  };
-              }
-              text = text.replace( /\$cursor\$/, "" );
-          }
-      }
-
-      pEditor.replaceRange( text, pSelf.from, pSelf.to );
-
-      if ( cursor ) {
-          pEditor.doc.setCursor( cursor );
-      }
-  } // _replaceCompletion
-
-
-  function _getPrevToken( pToken ) {    
-    var prevToken = pEditor.getTokenAt({ line: cur.line, ch: pToken.start });
-    if (pToken.string === "." ) {
-      return prevToken;
-    } else if ( prevToken.string === "." ) {
-      return _getPrevToken( prevToken );
-    } else {
-      return null;
-        
-    }
-    
-  } // _getPrevToken
-
-
-  // Check if we are dealing with a multi level object (ie. [schema.]package.procedure/function/... or schema.table/view/procedure/function)
-  prevToken = _getPrevToken(token);
-  if ( prevToken && prevToken.string !== "" ) {
-      parentName      = prevToken.string;
-      grandParentName = "";
-
-      // In the case of a package, check if a schema has been specified
-      prevToken = _getPrevToken( prevToken );
-      if ( prevToken ) {
-          grandParentName = prevToken.string;
-      }
-
-      // If a user has just entered a dot so far, don't use it to restrict the search
-      if ( search === "." ) {
-          search = "";
-          token.start++;
-      }
-
-  } else if ( search.indexOf( ":" ) === 0 || search.indexOf( "&" ) === 0 ) {
-      // If the token starts with ":" or "&" we expect it's a bind variable/substitution syntax and we want to code complete application and page items
-
-      type = "item";
-
-      // Remove the colon/and to not replace it later on
-      search = search.substr( 1 );
-      token.start++;
-
-  } else {
-      // Could be a database object or a template
-      type = "";
-  }
-
-  // Only call the server if the user has entered at least one character
-  if ( parentName || search ) {
-      pOptions.dataCallback({
-          type:        type,
-          search:      search,
-          parent:      parentName,
-          grantParent: grandParentName
-      }, _success );
-  }
-}; // end _customHint
-*/
 (function ($, util) {
   "use strict";
 
@@ -226,17 +47,59 @@ function customHint ( pEditor, pCallback, pOptions ) {
       ignoreChanged: false, // Warn On Unsaved Changes
       ajaxId: null,
       autocomplete: false,
-      runInFullscreen: false
+      runInFullscreen: false,
+      autocompleteHints: [],  
+      config: {} // override with JS initalization codes            
     },
     changed: false,
     baseId:  "aCodeMirrorPlugin",
+
+    /**
+     * Return Autocomplete Options
+     * @param {} cm 
+     * @param {*} option 
+     */  
+    _returnAutocompleteOptions: function(cm, options){      
+      var comp = options.autocompleteHints;
+      return new Promise(function(accept) {
+        setTimeout(function() {          
+          var cursor = cm.getCursor(), line = cm.getLine(cursor.line)
+          var start = cursor.ch, end = cursor.ch
+          while (start && /\w/.test(line.charAt(start - 1))) --start
+          while (end < line.length && /\w/.test(line.charAt(end))) ++end
+          var word = line.slice(start, end).toLowerCase()
+          
+          // filter array
+          var vOutput = comp.filter(function(value, index, arr){    
+            var vParam = value.text.toLowerCase();
+            var vParamOnly = vParam.substr(vParam.indexOf('$')+1);
+            
+            return vParam.startsWith(word) || vParamOnly.startsWith(word);
+          });
+
+         if (vOutput.length>0){
+           return accept({
+                list: vOutput
+              , from: CodeMirror.Pos(cursor.line, start)
+              , to: CodeMirror.Pos(cursor.line, end)
+            });
+         }else{
+           return accept(null);
+         }
+
+         
+        }, 100)
+      })      
+    } ,   
 
     // init function
     _init : function () {
       var uiw = this;
       var vMasterOk = false;
 
-      uiw.baseId = uiw.options.itemName;
+      uiw.baseId = uiw.options.itemName;      
+
+      $.extend(uiw.options,uiw.options.config);
 
       uiw._editor = 
         CodeMirror.fromTextArea(document.getElementById(uiw.options.itemName),
@@ -279,9 +142,6 @@ function customHint ( pEditor, pCallback, pOptions ) {
       }
 
       // code complete
-            
-      
-      
       uiw._initToolbar();
 
       if (uiw.options.runInFullscreen){
@@ -296,7 +156,6 @@ function customHint ( pEditor, pCallback, pOptions ) {
       // autocomplete
       if (uiw.options.autocomplete){
         CodeMirror.commands.autocomplete = function(pEditor) {
-
           var modeOption = pEditor.doc.modeOption,
               hint,
               options = {};
@@ -312,9 +171,11 @@ function customHint ( pEditor, pCallback, pOptions ) {
                 hint = CodeMirror.hint.html; 
                 break;
               case "text/x-plsql":
-                hint = customHint;//uiw._customHint;
+                hint = uiw._returnAutocompleteOptions;
+                options.autocompleteHints = uiw.options.autocompleteHints;
+                /*
                 options = {
-                    async:        true,
+                    async:        false,
                     dataCallback: function( pSearchOptions, pCallback ) {
                                     apex.server.plugin (uiw.options.ajaxId, {
                                       x01: "hint",
@@ -326,14 +187,16 @@ function customHint ( pEditor, pCallback, pOptions ) {
                                     });  
                                   }                 
                 };
+                */
                 break;
           }
 
-          if (hint)  {         
-            CodeMirror.showHint( pEditor, hint, options );
+          if (hint)  {                
+            CodeMirror.showHint(pEditor, hint, options );
           }
         };
-      }    
+        
+      }   
       
     
       // Init APEX item
@@ -398,7 +261,7 @@ function customHint ( pEditor, pCallback, pOptions ) {
                 
       });    
     },
-  
+
     // Log/Debug Function
     _log: function (pFunctionName, pLogMessage){
       apex.debug.log('Code Mirror', pFunctionName, pLogMessage);

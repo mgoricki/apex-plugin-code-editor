@@ -2,7 +2,8 @@
 --  DDL for Package Body PCK_CODE_EDITOR_PLUGIN
 --------------------------------------------------------
 
-  CREATE OR REPLACE EDITIONABLE PACKAGE BODY "PLUGINS"."PCK_CODE_EDITOR_PLUGIN" as
+  CREATE OR REPLACE EDITIONABLE PACKAGE BODY PCK_CODE_EDITOR_PLUGIN 
+  as
 
   -----------------------------------------------------------------------------
   -- PROCEDURE p_render
@@ -155,3 +156,4 @@
  end p_ajax_call;
 
 end pck_code_editor_plugin;
+/

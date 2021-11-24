@@ -11,7 +11,7 @@
 
 .codemirror-wrapper .codemirror-toolbar{
   padding:8px;
-  background-color: #f7f7f7;
+  background-color: #f7f5f3;
   border-bottom: 1px solid #ddd;
   height:41px;
   width:100%;
@@ -40,8 +40,21 @@
 } 
 
 .codemirror-wrapper .codemirror-toolbar button{
-  padding: .4rem .8rem;
+  height: 24px;
+  width: 24px;
+  margin-right: 8px;
+  border:none;
 } 
+.codemirror-wrapper .codemirror-toolbar button:hover{
+  background-color: var(--a-button-hover-background-color);
+  color: var(--a-button-hover-text-color);
+  border-color: var(--a-button-hover-border-color);
+  box-shadow: var(--a-button-hover-shadow);  
+}
+
+.codemirror-wrapper .codemirror-toolbar button.a-Button--pillEnd{
+  margin-right: 0;
+}
 
 .codemirror-wrapper.codemirror-wrapp-fullscreen .codemirror-toolbar{
   position:fixed;
@@ -56,7 +69,7 @@
 }  
 
 .codemirror-wrapper.codemirror-wrapp-fullscreen .codemirror-toolbar .aCodeMirrorPluginFullScreenOff{
-  display:inline-block
+  display:inline-flex
 }  
 
 .codemirror-wrapper.codemirror-wrapp-fullscreen .codemirror-toolbar .aCodeMirrorPluginFullScreenOn{
@@ -66,8 +79,10 @@
 /* Floating label */
 .codemirror-container-wrapper.t-Form-fieldContainer--floatingLabel .t-Form-label{
   line-height: 2rem;
-  font-size: 1.1rem;
-  padding-top: 0.4rem;  
+  font-size: var(--ut-field-fl-label-font-size, 0.875rem);
+  padding-top:0;  
+  position: relative;
+  top: -3px;
 }
 
 .codemirror-container-wrapper.t-Form-fieldContainer--floatingLabel .codemirror-wrapper .codemirror-toolbar{
