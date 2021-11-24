@@ -1,5 +1,5 @@
 # APEX Code Editor Plugin
-APEX (18.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaScript Library (version 5.34.0).
+APEX (21.2+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaScript Library (version 5.64.0).
 
 # Features
   - Readonly Mode
@@ -8,6 +8,7 @@ APEX (18.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaSc
   - Line numbers
   - PL/SQL mode
   - Undo/Redo
+  - Autocomplete
 
 
 # Changelog
@@ -16,6 +17,7 @@ APEX (18.1+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaSc
 - 1.0.1 20180920 - Added support for disable/enable DA
 - 1.0.2 20190103 - Run in fullscreen mode attribute
 - 1.0.3 20191009 - setHeight
+- 1.0.4 20211124 - New CodeMirror Version (5.64.0), autocomplete, minor CSS fixes for APEX 21.2
 
 # Install
 
@@ -54,7 +56,7 @@ where P2_EDITOR is static ID of the plugin item.
 
 Plugin is still in Beta version supporting only PL/SQL syntax highlighting.
 
-You can also find 5.1 version in source directory but it's not upgraded from version 1.0.0.
+You can also find older APEX versions of the plugin in source directory but it's not upgraded from version 1.0.0.
 
 # Demo
 
