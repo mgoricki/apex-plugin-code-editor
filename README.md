@@ -18,6 +18,7 @@ APEX (21.2+) Plugin built by using [Code Mirror](https://codemirror.net/) JavaSc
 - 1.0.2 20190103 - Run in fullscreen mode attribute
 - 1.0.3 20191009 - setHeight
 - 1.0.4 20211124 - New CodeMirror Version (5.64.0), autocomplete, minor CSS fixes for APEX 21.2
+- 1.0.5 20211202 - Validate Code
 
 # Install
 

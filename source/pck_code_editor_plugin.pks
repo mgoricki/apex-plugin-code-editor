@@ -19,6 +19,17 @@ create or replace PACKAGE PCK_CODE_EDITOR_PLUGIN as
     p_param  in            apex_plugin.t_item_ajax_param,
     p_result in out nocopy apex_plugin.t_item_ajax_result 
   );    
+  
+  
+  -----------------------------------------------------------------------------
+  -- FUNCITON f_validate_code
+  -- %usage: validates PL/SQL code
+  function f_validate_code(
+      p_code  varchar2
+    , p_hints varchar2
+  )
+    return varchar2;
+    
 
 end pck_code_editor_plugin;
 /

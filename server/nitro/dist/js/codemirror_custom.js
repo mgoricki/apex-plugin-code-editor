@@ -12,6 +12,7 @@
 *
 * Changes:
 * 
+* v.1.0.5 - 20211202 - Validate Code option
 * v.1.0.4 - 20211123 - upgraded to CodeMirror 5.64.0, APEX version 21.2
 * v.1.0.3 - 20191009 - setHeight and setWidth
 * v.1.0.0 - 20180820 - Initial version
@@ -33,7 +34,7 @@
 
 
 
-(function ($, util) {
+(function ($, util, debug) {
   "use strict";
 
   var C_PLUGIN_NAME = "Code Mirror Editor";
@@ -49,10 +50,23 @@
       autocomplete: false,
       runInFullscreen: false,
       autocompleteHints: [],  
+      validateCode: false,
       config: {} // override with JS initalization codes            
     },
+    _privateStorage : function () {
+      var uiw = this;
+      uiw._obj = {
+        wrapper$ : null
+      }        
+    },      
     changed: false,
     baseId:  "aCodeMirrorPlugin",
+
+    // Log/Debug Function
+    _log: function (pFunctionName, pLogMessage){
+      Array.prototype.unshift.call(arguments, 'codemirror_custom.js');
+      debug.apply(debug.log,arguments);
+    },
 
     /**
      * Return Autocomplete Options
@@ -99,10 +113,11 @@
     _init : function () {
       var uiw = this;
       var vMasterOk = false;
+      uiw._privateStorage();
 
       uiw.baseId = uiw.options.itemName;      
 
-      $.extend(uiw.options,uiw.options.config);
+      $.extend(uiw.options,uiw.options.config);      
 
       uiw._editor = 
         CodeMirror.fromTextArea(document.getElementById(uiw.options.itemName),
@@ -126,11 +141,14 @@
               },            
               "Esc": function(cm) {
                 if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+              },
+              "Ctrl-Alt-V": function(){
+                uiw._validateCode();
               }
+              
             },
             autoCloseBrackets: true
-          });
-
+          });      
 
       // event handlers
       // if Warn on unsaved changes is set to Yes
@@ -146,6 +164,19 @@
 
       // code complete
       uiw._initToolbar();
+
+      // close validation message
+      if (uiw.options.validateCode){
+        uiw._obj.wrapper$.on('click', '.codemirror-msg-close', function(){
+          var vThis$ = $(this);
+          var vWrapper$ = vThis$.closest('.codemirror-msg-box');          
+          if(vWrapper$.children().length==1){
+            vWrapper$.remove();
+          }else{
+            vThis$.closest('.codemirror-msg').remove();          
+          }                   
+        });
+      };
 
       if (uiw.options.runInFullscreen){
         uiw._editor.setOption('fullScreen', true);
@@ -217,13 +248,13 @@
 
         // get value
         getValue: function(){
-          apex.debug.log('CodeMirror Plugin', 'getValue');
+          uiw._log('CodeMirror Plugin', 'getValue');
           return uiw._editor.doc.getValue();
         },
 
         // set value
         setValue: function(pValue){
-          apex.debug.log('CodeMirror Plugin', 'setValue');
+          uiw._log('CodeMirror Plugin', 'setValue');
           uiw._editor.doc.setValue(pValue);
         },
         
@@ -239,12 +270,12 @@
         
         // show
         show: function(){
-          apex.debug.log('CodeMirror Plugin', 'Not implemented');
+          uiw._log('CodeMirror Plugin', 'Not implemented');
         },  
         
         // hide
         hide: function(){
-          apex.debug.log('CodeMirror Plugin', 'Not implemented');
+          uiw._log('CodeMirror Plugin', 'Not implemented');
         },  
         
         // is changed        
@@ -263,12 +294,7 @@
         }        
                 
       });    
-    },
-
-    // Log/Debug Function
-    _log: function (pFunctionName, pLogMessage){
-      apex.debug.log('Code Mirror', pFunctionName, pLogMessage);
-      //console.log('Code Mirror', pFunctionName, pLogMessage);
+      
     },
   
     _destroy: function(){
@@ -289,6 +315,36 @@
             .attr(icon)
             .markup( "' aria-hidden='true'></span></button>" );  
     },
+    
+    /**
+     * validateCode
+     */
+    _validateCode: function(){
+      var uiw = this;
+      uiw._log('_validateCode', arguments);
+      var vValButton = uiw._obj.wrapper$.find('.codemirror-toolbar > button[id$=validate]')
+      vValButton.prop('disabled', true);  
+      uiw._obj.wrapper$.find('.codemirror-msg-box').remove();
+      var vRequest = apex.server.plugin ( uiw.options.ajaxId, {
+          x01: "VALIDATE",
+          x02: uiw._editor.doc.getValue()
+        }, {
+          success: function(pData) {
+            if (pData.msgType){
+              vValButton.prop('disabled', false);  
+              uiw._obj.wrapper$.find('.codemirror-toolbar').after(
+                  '<div class="codemirror-msg-box">'+
+                    '<div class="codemirror-msg codemirror-msg-type-'+pData.msgType+'">'+
+                      '<div class="msg-text">'+pData.msg+'</div>'+
+                      '<button type="button" title="Close" aria-label="My Button" class="codemirror-msg-close t-Button t-Button--noLabel t-Button--icon t-Button--small"><span aria-hidden="true" class="t-Icon fa fa-times"></span></button>'+
+                    '</div>'+
+                  '</div>');
+
+              var vMsg =   uiw._obj.wrapper$.find('.codemirror-msg').delay(3000).fadeOut('slow');   
+            }
+          }        
+        });      
+    },
 
     _initToolbar: function(){
       var uiw = this,
@@ -306,6 +362,9 @@
                 case 'fullScreenOff':
                   if (uiw._editor.getOption("fullScreen")) uiw._editor.setOption("fullScreen", false);
                   break;
+                case 'validate':
+                  uiw._validateCode();
+                  break;  
                 default:
                   setTimeout(function() {
                     uiw._editor.execCommand( pCommand );
@@ -325,9 +384,14 @@
         uiw._renderButton(toolbar, 'redo', 'Redo' , 'icon-redo', 'a-Button--small a-Button--pill', true);
         addAction('undo');
         addAction('redo');                
-      }  
-      uiw._renderButton(toolbar, 'fullScreenOn' , 'Full Screen On' , 'icon-maximize', 'a-Button--small a-Button--pillEnd aCodeMirrorPluginFullScreenOn u-pullRight');
-      uiw._renderButton(toolbar, 'fullScreenOff', 'Full Screen Off', 'icon-restore', 'a-Button--small a-Button--pillEnd aCodeMirrorPluginFullScreenOff u-pullRight');
+      } 
+      
+      if (uiw.options.validateCode){
+        uiw._renderButton(toolbar, 'validate', 'Validate Code (Ctrl+Alt+V)' , 'icon-check', 'a-Button--small a-Button--pillStart');
+        addAction('validate');                
+      }
+      uiw._renderButton(toolbar, 'fullScreenOn' , 'Full Screen On (F11)' , 'icon-maximize', 'a-Button--small a-Button--pillEnd aCodeMirrorPluginFullScreenOn u-pullRight');
+      uiw._renderButton(toolbar, 'fullScreenOff', 'Full Screen Off (Esc)', 'icon-restore', 'a-Button--small a-Button--pillEnd aCodeMirrorPluginFullScreenOff u-pullRight');
       toolbar.markup('</div>');
 
       // generate actions
@@ -337,6 +401,8 @@
       uiw.element.after(toolbar.toString());
       uiw.element.closest('div').addClass('codemirror-wrapper');
       uiw.element.closest('div.t-Form-fieldContainer').addClass('codemirror-container-wrapper');
+
+      uiw._obj.wrapper$ = $(uiw.element).closest('.codemirror-wrapper');
       
 /*
       uiw.settingsMenu$ = $(toolbar);
@@ -355,27 +421,27 @@
     },
     _enable: function(){
       var uiw = this;
-      apex.debug.log(C_PLUGIN_NAME, '_enable');
-      uiw._editor.setOption('readOnly', false);
-      var wrapper$ = uiw.element.closest('.codemirror-wrapper');
-      wrapper$.removeClass(C_TOOLBAR_CLASS_READONLY);
-      wrapper$.find('.codemirror-toolbar > button[id$=undo]').prop('disabled', false);
-      wrapper$.find('.codemirror-toolbar > button[id$=redo]').prop('disabled', false);
+      uiw._log(C_PLUGIN_NAME, '_enable');
+      uiw._editor.setOption('readOnly', false);      
+      uiw._obj.wrapper$.removeClass(C_TOOLBAR_CLASS_READONLY);
+      uiw._obj.wrapper$.find('.codemirror-toolbar > button[id$=undo]').prop('disabled', false);
+      uiw._obj.wrapper$.find('.codemirror-toolbar > button[id$=redo]').prop('disabled', false);
+      uiw._obj.wrapper$.find('.codemirror-toolbar > button[id$=validate]').prop('disabled', false);      
     },
     _disable: function(){
       var uiw = this;
-      apex.debug.log(C_PLUGIN_NAME, '_disable');
+      uiw._log(C_PLUGIN_NAME, '_disable');
       uiw._editor.setOption('readOnly', true);
-      var wrapper$ = uiw.element.closest('.codemirror-wrapper');
-      wrapper$.addClass(C_TOOLBAR_CLASS_READONLY);
-      wrapper$.find('.codemirror-toolbar > button[id$=undo]').prop('disabled', true);
-      wrapper$.find('.codemirror-toolbar > button[id$=redo]').prop('disabled', true);
+      uiw._obj.wrapper$.addClass(C_TOOLBAR_CLASS_READONLY);
+      uiw._obj.wrapper$.find('.codemirror-toolbar > button[id$=undo]').prop('disabled', true);
+      uiw._obj.wrapper$.find('.codemirror-toolbar > button[id$=redo]').prop('disabled', true);
+      uiw._obj.wrapper$.find('.codemirror-toolbar > button[id$=validate]').prop('disabled', true);            
     }
 
 
   });  
 
-})(apex.jQuery, apex.util);
+})(apex.jQuery, apex.util, apex.debug);
 
 
 // CodeMirror, copyright (c) by Marijn Haverbeke and others

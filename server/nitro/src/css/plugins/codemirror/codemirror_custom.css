@@ -102,3 +102,33 @@
 .codemirror-wrapper.codemirror-readonly .CodeMirror .CodeMirror-scroll{
   opacity: 0.8;
 }
+
+
+/* messages */
+.codemirror-wrapper .codemirror-msg-box{
+  width: 100%;
+  box-shadow: 0px 1px #dddddd;
+  z-index: 5;
+}
+.codemirror-wrapper .codemirror-msg-box .codemirror-msg{
+  display:flex;  
+  margin:6px;
+}
+.codemirror-wrapper .codemirror-msg-box .codemirror-msg .msg-text{
+  font-size: 12px;
+  line-height: 18px;
+  border: 1px solid #ccc;
+  padding: 2px 4px;
+  border-radius: 2px;
+  margin-right: 4px;
+  flex-grow:1;  
+}
+.codemirror-wrapper .codemirror-msg-box .codemirror-msg.codemirror-msg-type-S .msg-text{
+  background-color:#e0f5da;
+  border-color: #b1cdaa;
+  color: #4e7a43;
+}
+.codemirror-wrapper .codemirror-msg-box .codemirror-msg.codemirror-msg-type-E .msg-text{
+  background-color: #ffd9d4;
+}
+
